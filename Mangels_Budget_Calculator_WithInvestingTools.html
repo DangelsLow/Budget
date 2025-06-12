@@ -1,0 +1,248 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mangels Budget Calculator</title>
+  <style>
+    body {
+      background-color: #1e1e1e;
+      color: #99ccff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+      background-color: #2e2e2e;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      border: 1px solid darkred;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #3e3e3e;
+    }
+    td[contenteditable="true"] {
+      background-color: #2b2b2b;
+    }
+    input, button {
+      background-color: #2e2e2e;
+      color: #99ccff;
+      border: 1px solid darkred;
+      padding: 5px 10px;
+      border-radius: 6px;
+      margin: 5px 0;
+    }
+    button {
+      background-color: darkred;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    h2 {
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Mangels Budget Calculator</h1>
+
+<label>VA Disability Income:</label>
+<input type="number" id="income-va" value="4600"><br>
+<label>Paycheck 1 Actual:</label>
+<input type="number" id="income-1" value="2200"><br>
+<label>Paycheck 2 Actual:</label>
+<input type="number" id="income-2" value="2200"><br>
+
+<h2>Bills and Expenses</h2>
+<button onclick="addBillRow()">Add New Bill</button>
+<table id="expense-table">
+  <thead>
+    <tr>
+      <th>Category</th>
+      <th>Amount</th>
+      <th>Description</th>
+      <th>Payment Method</th>
+      <th>Notes</th>
+      <th>Due Date</th>
+    </tr>
+  </thead>
+  <tbody>
+<tr><td contenteditable="true">Housing</td><td contenteditable="true">2100</td><td contenteditable="true">Mortgage Payment</td><td contenteditable="true">Bank Transfer</td><td contenteditable="true">VA Loan</td><td contenteditable="true">2025-06-01</td></tr>
+<tr><td contenteditable="true">Utilities</td><td contenteditable="true">350</td><td contenteditable="true">Electricity</td><td contenteditable="true">Card</td><td contenteditable="true">Summer estimate</td><td contenteditable="true">2025-06-02</td></tr>
+<tr><td contenteditable="true">Internet</td><td contenteditable="true">100</td><td contenteditable="true">Spectrum Internet</td><td contenteditable="true">Card</td><td contenteditable="true">400 Mbps Plan</td><td contenteditable="true">2025-06-03</td></tr>
+<tr><td contenteditable="true">Insurance</td><td contenteditable="true">110</td><td contenteditable="true">Auto Insurance</td><td contenteditable="true">Card</td><td contenteditable="true">Progressive</td><td contenteditable="true">2025-06-04</td></tr>
+<tr><td contenteditable="true">Groceries</td><td contenteditable="true">300</td><td contenteditable="true">H-E-B</td><td contenteditable="true">Card</td><td contenteditable="true">Bi-weekly Groceries</td><td contenteditable="true">2025-06-05</td></tr>
+<tr><td contenteditable="true">Groceries</td><td contenteditable="true">300</td><td contenteditable="true">H-E-B</td><td contenteditable="true">Card</td><td contenteditable="true">Bi-weekly Groceries</td><td contenteditable="true">2025-06-19</td></tr>
+<tr><td contenteditable="true">Medical</td><td contenteditable="true">150</td><td contenteditable="true">TRT Subscription</td><td contenteditable="true">Card</td><td contenteditable="true">Hone Health</td><td contenteditable="true">2025-06-06</td></tr>
+<tr><td contenteditable="true">Entertainment</td><td contenteditable="true">100</td><td contenteditable="true">Streaming Services</td><td contenteditable="true">Card</td><td contenteditable="true">Netflix, Prime, etc.</td><td contenteditable="true">2025-06-07</td></tr>
+<tr><td contenteditable="true">Savings</td><td contenteditable="true">500</td><td contenteditable="true">Auto Transfer</td><td contenteditable="true">Cash App</td><td contenteditable="true">Wife Bi-weekly</td><td contenteditable="true">2025-06-08</td></tr>
+<tr><td contenteditable="true">Nissan Payment</td><td contenteditable="true">521</td><td contenteditable="true">New Car Payment</td><td contenteditable="true">Bank Transfer</td><td contenteditable="true">Monthly</td><td contenteditable="true">2025-06-01</td></tr>
+<tr><td contenteditable="true">Nissan Warranty</td><td contenteditable="true">104</td><td contenteditable="true">Car Warranty</td><td contenteditable="true">Bank Transfer</td><td contenteditable="true">Monthly</td><td contenteditable="true">2025-06-01</td></tr>
+<tr><td contenteditable="true">Food</td><td contenteditable="true">150</td><td contenteditable="true">Baby Snacks</td><td contenteditable="true">Card</td><td contenteditable="true">Rando Baby Food</td><td contenteditable="true">2025-06-01</td></tr>
+</tbody>
+</table>
+
+<div style="background-color: #800020; padding: 25px 40px; border-radius: 25px; width: fit-content; font-size: 3em; font-weight: bold; color: #fff; margin-bottom: 15px;">
+  Total Expenses: <span id="total-expenses">$0.00</span>
+</div>
+<p style="font-size: 1.5em;"><strong>Total Leftover After Expenses:</strong> <span id="leftover-after-expenses">$0.00</span></p>
+
+<h2>Optimized Leftover Budget</h2>
+<p style="font-size: 1.5em;"><strong>Allocated Leftover:</strong> <span id="leftover-after-insurance">$0.00</span></p>
+<table>
+  <thead>
+    <tr>
+      <th>Category</th>
+      <th>Allocated Amount</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Insurance Premium</td><td id="insurance-cell">$0.00</td><td>Reserve $166.67/month for $1000/6mo premium</td></tr>
+    <tr><td>Savings</td><td id="savings-cell">$0.00</td><td>50% of leftover</td></tr>
+    <tr><td>Fun / Shopping</td><td id="fun-cell">$0.00</td><td>30% of leftover</td></tr>
+    <tr><td>Delivery Food</td><td id="food-cell">$0.00</td><td>20% of leftover (~X orders)</td></tr>
+  </tbody>
+</table>
+
+<script>
+function updateTotalsAndOptimizedBudget() {
+  const vaIncome = parseFloat(document.getElementById('income-va').value) || 0;
+  const pay1 = parseFloat(document.getElementById('income-1').value) || 0;
+  const pay2 = parseFloat(document.getElementById('income-2').value) || 0;
+  const totalIncome = vaIncome + pay1 + pay2;
+
+  const rows = document.querySelectorAll('#expense-table tbody tr');
+  let totalExpenses = 0;
+  rows.forEach(row => {
+    const amount = parseFloat(row.cells[1].textContent);
+    if (!isNaN(amount)) {
+      totalExpenses += amount;
+    }
+  });
+
+  document.getElementById('total-expenses').textContent = `$${totalExpenses.toFixed(2)}`;
+  document.getElementById('leftover-after-expenses').textContent = `$${(totalIncome - totalExpenses).toFixed(2)}`;
+
+  let leftover = totalIncome - totalExpenses;
+  let insuranceReserve = 166.67;
+  if (leftover >= insuranceReserve) {
+    leftover -= insuranceReserve;
+  } else {
+    insuranceReserve = leftover;
+    leftover = 0;
+  }
+
+  const savings = leftover * 0.5;
+  const fun = leftover * 0.3;
+  const food = leftover * 0.2;
+  const foodOrders = Math.floor(food / 25);
+
+  document.getElementById('insurance-cell').textContent = `$${insuranceReserve.toFixed(2)}`;
+  document.getElementById('savings-cell').textContent = `$${savings.toFixed(2)}`;
+  document.getElementById('fun-cell').textContent = `$${fun.toFixed(2)}`;
+  document.getElementById('food-cell').textContent = `$${food.toFixed(2)} (~${foodOrders} orders)`;
+  document.getElementById('leftover-after-insurance').textContent = `$${leftover.toFixed(2)}`;
+}
+
+
+window.onload = function () {
+  updateTotalsAndOptimizedBudget();
+  document.querySelectorAll('#expense-table tbody td').forEach(cell => {
+    cell.setAttribute('contenteditable', 'true');
+    cell.addEventListener('blur', updateTotalsAndOptimizedBudget);
+  });
+}
+</script>
+
+
+<h2>Hypothetical Investing Allocation</h2>
+<p style="font-size: 1.5em;"><strong>Weekly Investment Goal:</strong> $100</p>
+<p style="font-size: 1.5em;"><strong>Monthly Investment Total:</strong> $400</p>
+<table>
+  <thead>
+    <tr>
+      <th>Asset Type</th>
+      <th>Allocation</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Crypto (ETH, BTC, altcoins)</td><td>$120</td><td>30% high-risk, long-term hold</td></tr>
+    <tr><td>Growth Tech ETFs</td><td>$160</td><td>40% exposure to volatile tech sectors</td></tr>
+    <tr><td>Dividend Stocks/REITs</td><td>$40</td><td>10% lower risk, yield-oriented</td></tr>
+    <tr><td>Startup Investing</td><td>$40</td><td>10% via Republic, StartEngine, etc.</td></tr>
+    <tr><td>Speculative Stocks</td><td>$40</td><td>10% moonshot investments</td></tr>
+  </tbody>
+</table>
+
+
+
+<h2>How to Invest Your First $100 Weekly Using Robinhood</h2>
+<p>This simplified guide helps you invest $100 each week directly through Robinhood:</p>
+<table>
+  <thead>
+    <tr>
+      <th>Step</th>
+      <th>Asset Type</th>
+      <th>Amount</th>
+      <th>Robinhood Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>1</td><td>Crypto (ETH/BTC)</td><td>$30</td><td>Set up recurring buy for ETH or BTC (e.g., every Sunday)</td></tr>
+    <tr><td>2</td><td>Growth Tech ETFs (e.g., ARKK)</td><td>$40</td><td>Buy fractional shares of ARKK weekly</td></tr>
+    <tr><td>3</td><td>Dividend Stocks (e.g., SCHD)</td><td>$10</td><td>Invest in dividend ETFs like SCHD monthly</td></tr>
+    <tr><td>4</td><td>Speculative Stocks</td><td>$20</td><td>Pick a high-risk stock and DCA (dollar-cost average) into it weekly</td></tr>
+  </tbody>
+</table>
+<p><strong>Tip:</strong> Link your bank account to Robinhood and set up auto-deposit of $100/week to streamline the process.</p>
+
+
+
+<h2>Weekly Robinhood Investment Tracker</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Asset Type</th>
+      <th>Amount</th>
+      <th>Ticker</th>
+      <th>Strategy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Crypto (ETH/BTC)</td><td>$30</td><td>ETH / BTC</td><td>Recurring Buy Weekly</td></tr>
+    <tr><td>Growth Tech ETFs</td><td>$40</td><td>ARKK / SOXL</td><td>DCA Weekly</td></tr>
+    <tr><td>Dividend ETFs</td><td>$15</td><td>SCHD / VYM</td><td>Long-Term Hold</td></tr>
+    <tr><td>Speculative Stocks</td><td>$15</td><td>Choose 1–2</td><td>Track News & Earnings</td></tr>
+  </tbody>
+</table>
+
+<h2>Investment Dashboard (Placeholder)</h2>
+<p>This section can be updated manually for now. Automatable with Google Sheets or CSV import later.</p>
+<ul>
+  <li>Total Invested This Month: $<span id="total-invested-month">400</span></li>
+  <li>Portfolio Value: $<input type="text" placeholder="Enter total value" /></li>
+  <li>Overall Gain/Loss: <input type="text" placeholder="+/- %" /></li>
+</ul>
+
+<h2>Weekly Investing Checklist</h2>
+<ul>
+  <li><input type="checkbox" /> $100 transferred to Robinhood</li>
+  <li><input type="checkbox" /> ETH/BTC Recurring Buy Confirmed</li>
+  <li><input type="checkbox" /> ARKK/SOXL Buy Confirmed</li>
+  <li><input type="checkbox" /> SCHD/VYM Buy Confirmed</li>
+  <li><input type="checkbox" /> Speculative Stock Chosen and Monitored</li>
+  <li><input type="checkbox" /> Portfolio Value Updated</li>
+</ul>
+
+</body>
+</html>
